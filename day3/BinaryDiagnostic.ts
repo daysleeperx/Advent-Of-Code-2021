@@ -1,4 +1,3 @@
-import { count } from 'console';
 import { readFileSync } from 'fs';
 import path from 'path';
 
