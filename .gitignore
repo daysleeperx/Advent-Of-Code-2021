@@ -350,3 +350,12 @@ MigrationBackup/
 .ionide/
 
 out/
+
+# Idris
+**/build/*
+**/interpret_app/*
+*.ibc
+*.o
+*.ttc
+*.ttm
+interpret

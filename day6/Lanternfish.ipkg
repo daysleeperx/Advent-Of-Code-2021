@@ -1,0 +1,12 @@
+package day6
+
+brief = "AoC 2021 Day 6: LanternfishIdris"
+authors = "Viktor Pavlov"
+
+modules = Lanternfish, Util
+
+main = Lanternfish
+executable = interpret
+outputdir = "."
+
+depends = contrib
