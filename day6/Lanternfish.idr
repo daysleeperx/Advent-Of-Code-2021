@@ -80,6 +80,6 @@ main = do
          args <- getArgs
          let (file :: _) = drop 1 args | [] => putStrLn "No file provided!"
          (Right symbols) <- readFile file | (Left error) => putStrLn $ show error
-         let (Just nats) = consolidate $ map parsePositive $ forget $ Data.Strings.split ( == ',') symbols | Nothing => putStrLn "Parsing error!"
+         let (Just nats) = consolidate $ map parsePositive $ forget $ split ( == ',') symbols | Nothing => putStrLn "Parsing error!"
          let (Just states) = consolidate $ map (\n => natToFin n 9) nats | Nothing => putStrLn "Invalid states!"
          putStrLn . show $ foldr (+) Z $ growth 256 $ initCounter (zeroes 9) states

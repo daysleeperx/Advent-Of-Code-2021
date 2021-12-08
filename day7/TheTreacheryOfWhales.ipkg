@@ -1,0 +1,10 @@
+package day7
+
+brief = "AoC 2021 Day 7: The Treachery of Whales"
+authors = "Viktor Pavlov"
+
+modules = TheTreacheryOfWhales, Util
+
+main = TheTreacheryOfWhales
+executable = interpret
+outputdir = "."
