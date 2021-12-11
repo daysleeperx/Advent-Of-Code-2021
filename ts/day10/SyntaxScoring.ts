@@ -142,7 +142,7 @@ function completeLines(lines: Array<string>): Array<number> {
     
     let lineScore: number = 0;
     tail.forEach(symbol => (openCloseMap.has(symbol)) ? stack.pop() : stack.push(symbol)); 
-    while (stack.length !== 0) {
+    while (stack.length) {
       const open: string = stack.pop();
       const [_, score] = closeOpenMap.get(open);
       lineScore = lineScore * 5 + score;

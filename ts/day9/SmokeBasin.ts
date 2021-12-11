@@ -29,9 +29,7 @@ type Point = [x: number, y: number, value: number];
 type Dir = [dx: number, dy: number];
 const dirs: Array<Dir> = [[0, 1], [0, -1], [-1, 0], [1,0]];
 
-function inBounds(grid: Array<Array<number>>, row: number, col: number, dx: number, dy: number): boolean {
-  return row + dy >= 0 && row + dy < grid.length  && col + dx >= 0 && col + dx < grid[0].length 
-}
+const inBounds = (grid: Array<Array<number>>, row: number, col: number): boolean => grid[row]?.[col] !== undefined;
 
 function getLowPoints(grid: Array<Array<number>>): Array<Point> {
     const lowPoints: Array<Point> = [];
@@ -39,9 +37,8 @@ function getLowPoints(grid: Array<Array<number>>): Array<Point> {
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid[0].length; col++) {
         let valid: boolean = true;
-        for (const dir of dirs) {
-          const [dx, dy] = dir;
-          if (inBounds(grid, row, col, dx, dy) && grid[row][col] >= grid[row + dy][col + dx]) {
+        for (const [r, c] of dirs.map(([dx, dy]) => [row + dy, col + dx])) {
+          if (inBounds(grid, r, c) && grid[row][col] >= grid[r][c]) {
             valid = false;
             break;
           }
@@ -51,7 +48,6 @@ function getLowPoints(grid: Array<Array<number>>): Array<Point> {
         };
       }
     }
-
     return lowPoints;
 }
 
@@ -98,14 +94,9 @@ What do you get if you multiply together the sizes of the three largest basins?
 function traverseBasin(grid: Array<Array<number>>, row: number, col: number, visited: Set<string>): void {
   visited.add([row, col].join(","));
 
-  for (const dir of dirs) {
-    const [dx, dy] = dir;
-    if (
-      inBounds(grid, row, col, dx, dy) && 
-      grid[row + dy][col + dx] !== 9 && 
-      !visited.has([row + dy, col + dx].join(","))
-    ) {
-      traverseBasin(grid, row + dy, col + dx, visited);
+  for (const [r, c] of dirs.map(([dx, dy]) => [row + dy, col + dx])) {
+    if (inBounds(grid, r, c) && grid[r][c] !== 9 && !visited.has([r, c].join(","))) {
+      traverseBasin(grid, r, c, visited);
     }
   }
 }
