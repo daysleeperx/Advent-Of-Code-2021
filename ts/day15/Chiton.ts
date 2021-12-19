@@ -70,7 +70,7 @@ function findPath(grid: Grid, start: Coord, goal: Coord): Path {
             .filter(([x1, y1]) => grid[y1]?.[x1])
             .map<Coord>(([x1, y1]) => [x1, y1, grid[y1][x1]])
     ) {
-        const [_x1, _x2, cost] = nbr;
+        const [_x1, _y1, cost] = nbr;
         const newCost: number = costSoFar.get(current) + cost;
         if (!cameFrom.has(nbr) || newCost < costSoFar.get(nbr)) {
             costSoFar.set(nbr, newCost);
