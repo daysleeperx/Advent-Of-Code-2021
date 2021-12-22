@@ -104,7 +104,7 @@ function decodeSubs(packet: string, subs: number): [Array<Node>, string] {
 }
 
 function decodeSubsByLength(packet: string, subLength: number): [Array<Node>, string] {
-  const nodes: Array<Node> = [];
+    const nodes: Array<Node> = [];
     let totalPacketsLength = 0;
     while (subLength !== totalPacketsLength) {
       const [node, rest] = decode(packet);
