@@ -1,0 +1,10 @@
+package day7
+
+brief = "AoC 2021 Day 1: Sonar Sweep"
+authors = "Viktor Pavlov"
+
+modules = SonarSweep
+
+main = SonarSweep
+executable = interpret
+outputdir = "."
