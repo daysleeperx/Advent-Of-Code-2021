@@ -1,0 +1,12 @@
+package day2
+
+brief = "AoC 2021 Day 2: Dive"
+authors = "Viktor Pavlov"
+
+modules = Dive
+
+main = Dive
+executable = interpret
+outputdir = "."
+
+depends = contrib
