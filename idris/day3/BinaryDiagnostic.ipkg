@@ -1,0 +1,12 @@
+package day3
+
+brief = "AoC 2021 Day 3: Binary Diagnostic"
+authors = "Viktor Pavlov"
+
+modules = BinaryDiagnostic
+
+main = BinaryDiagnostic
+executable = interpret
+outputdir = "."
+
+depends = contrib
