@@ -6,8 +6,14 @@ import System.File
 import Data.List
 import Data.String
 import Data.Either
-import Data.String.Parser           
+import Data.String.Parser
 
+
+Point : Type
+Point = (Integer, Integer)
+
+Point2 : Type
+Point2 = (Integer, Point)
 
 data Command = Forward Integer | Down Integer | Up Integer
 
@@ -24,13 +30,13 @@ parseCommand = string "forward" *> space $> Forward <*> integer
 parseCommands : Parser (List Command)
 parseCommands = sepBy parseCommand $ char '\n'
 
-move : (pos : (Integer, Integer)) -> Command-> (Integer, Integer)
+move : (pos : Point) -> Command -> Point
 move (x, y) cmd = case cmd of
                   (Forward dx) => (x + dx, y)
                   (Down dy) => (x, y + dy)
                   (Up dy) => (x, y - dy)
 
-move2 : (pos : (Integer, Integer, Integer)) -> Command -> (Integer, Integer, Integer)
+move2 : (pos : Point2) -> Command -> Point2
 move2 (x, y, aim) cmd = case cmd of
                      (Forward dx) => (x + dx, y + aim * dx, aim) 
                      (Down dy) => (x, y, aim + dy)
