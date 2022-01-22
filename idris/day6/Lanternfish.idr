@@ -4,10 +4,8 @@ module Lanternfish
 import System
 import System.File
 import Data.List
-import Data.List1
-import Data.Strings
 import Data.Vect
-import Util
+import Data.String.Parser
 
 {--
 The sea floor is getting steeper. Maybe the sleigh keys got carried this way?
@@ -64,22 +62,26 @@ Suppose the lanternfish live forever and have unlimited food and space. Would th
 
 After 256 days in the example above, there would be a total of 26984457539 lanternfish!
 --}
-initCounter: (counter: Vect 9 Nat) -> (states: List (Fin 9)) -> Vect 9 Nat
+
+zeroes : (n: Nat) -> Vect n Nat
+zeroes n = replicate n Z
+
+initCounter : (counter: Vect 9 Nat) -> (states: List (Fin 9)) -> Vect 9 Nat
 initCounter counter [] = counter
 initCounter counter (x :: xs) = initCounter (replaceAt x (S $ index x counter) counter) xs
 
-growth: (days: Nat) -> (states: Vect 9 Nat) -> Vect 9 Nat
+growth : (days: Nat) -> (states: Vect 9 Nat) -> Vect 9 Nat
 growth Z states = states
 growth (S k) states = growth k $ zipWith (+) newFish $ tail states ++ [Z]
     where
-      newFish: Vect 9 Nat
+      newFish : Vect 9 Nat
       newFish = replaceAt 8 (index 0 states) . replaceAt 6 (index 0 states) $ zeroes 9
 
 main: IO ()
 main = do
          args <- getArgs
-         let (file :: _) = drop 1 args | [] => putStrLn "No file provided!"
-         (Right symbols) <- readFile file | (Left error) => putStrLn $ show error
-         let (Just nats) = consolidate $ map parsePositive $ forget $ split ( == ',') symbols | Nothing => putStrLn "Parsing error!"
-         let (Just states) = consolidate $ map (\n => natToFin n 9) nats | Nothing => putStrLn "Invalid states!"
-         putStrLn . show $ foldr (+) Z $ growth 256 $ initCounter (zeroes 9) states
+         let (file :: _) = drop 1 args | [] => printLn "No file provided!"
+         (Right symbols) <- readFile file | (Left error) => printLn error
+         let (Right (nats, _)) = parse (commaSep natural) symbols | (Left error) => printLn error
+         let (Just states) = traverse (\n => natToFin n 9) nats | Nothing => printLn "Invalid states!"
+         printLn $ foldr (+) Z $ growth 256 $ initCounter (zeroes 9) states

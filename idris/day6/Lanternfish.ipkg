@@ -1,9 +1,9 @@
 package day6
 
-brief = "AoC 2021 Day 6: LanternfishIdris"
+brief = "AoC 2021 Day 6: Lanternfish"
 authors = "Viktor Pavlov"
 
-modules = Lanternfish, Util
+modules = Lanternfish
 
 main = Lanternfish
 executable = interpret
