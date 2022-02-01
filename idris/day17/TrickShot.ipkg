@@ -1,0 +1,12 @@
+package day17
+
+brief = "AoC 2021 Day 17: Trick Shot"
+authors = "Viktor Pavlov"
+
+modules = TrickShot
+
+main = TrickShot
+executable = interpret
+outputdir = "."
+
+depends = contrib
