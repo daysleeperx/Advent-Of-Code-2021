@@ -15,24 +15,20 @@ Path : Type
 Path = List1 Point
 
 BoundingBox : Type
-BoundingBox = List1 Point
+BoundingBox = (Point, Point)
 
 parsePoint : Parser Point
 parsePoint = (,) <$> (string "x=" *> integer) <*> (string ".." *> integer)
          <|> (,) <$> (string "y=" *> integer) <*> (string ".." *> integer)
 
-parseArea : Parser (Point, Point)         
+parseArea : Parser BoundingBox
 parseArea = (,) <$> (string "target area: " *> parsePoint) <*> (string ", " *> parsePoint)
 
-boundingBox : (area : (Point, Point)) -> Maybe BoundingBox
-boundingBox ((x1, x2), (y1, y2)) = fromList [(x, y) | x <- [x1..x2], y <- [y2..y1]]
-
 inBounds : (point : Point) -> (box : BoundingBox) -> Bool
-inBounds point = elem point . forget
+inBounds (x, y) ((x1, x2), (y1, y2)) = x >= x1 && x <= x2 && y >= y1 && y <= y2
 
 outOfRange : (point : Point) -> (box : BoundingBox) -> Bool
-outOfRange (x, y) box with (last box)
-        _ | (x2, y2) = x > x2 || y < y2
+outOfRange (x, y) ((x1, x2), (y1, y2)) = x > x2 || y < y1
 
 sign : Integer -> Integer
 sign x = if x > 0 then 1 else if x < 0 then -1 else 0
@@ -61,7 +57,10 @@ main = do
         let (file :: _) = drop 1 args | [] => printLn "No file provided!"
         (Right symbols) <- readFile file | (Left error) => printLn error
         let (Right (((x1, x2), (y1, y2)), _)) = parse parseArea symbols | (Left error) => printLn error
-        let (Just box) = boundingBox ((x1, x2), (y1, y2)) | Nothing => printLn "Invalid ranges!"
-        let paths = getAllPaths box [(x, y) | x <- [(cast . floor . sqrt . cast) (2 * x1)..x2], y <- [y1..abs y1 - 1]] 
+        let paths = getAllPaths ((x1, x2), (y1, y2))  [
+             (x, y)
+            | x <- [(cast . floor . sqrt . cast) (2 * x1)..x2]
+            , y <- [y1..abs y1 - 1]
+        ]           
         printLn $ foldl (\acc, path => max acc $ (foldl1 max . map snd) path) 0 paths
         printLn $ length paths
