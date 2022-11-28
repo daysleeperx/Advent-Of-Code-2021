@@ -1,0 +1,12 @@
+package day4
+
+brief = "AoC 2021 Day 4: Giant Squid"
+authors = "Viktor Pavlov"
+
+modules = GiantSquid
+
+main = GiantSquid
+executable = interpret
+outputdir = "."
+
+depends = contrib
