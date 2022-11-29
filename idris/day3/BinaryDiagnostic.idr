@@ -67,17 +67,18 @@ bitsToInteger [] = 0
 bitsToInteger (b :: xs) = 2 * bitsToInteger xs + (cast b)
 
 calculatePowerConsumption : InputType -> Integer
-calculatePowerConsumption (n ** list) = let
-                                            gamma = (bitsToInteger . reverse . mostCommon . calculateGamma) list
-                                            epsilon = gamma `xor` (bitsToInteger $ replicate n High)
-                                        in
-                                            gamma * epsilon
+calculatePowerConsumption (n ** list) =
+    let
+        gamma = (bitsToInteger . reverse . mostCommon . calculateGamma) list
+        epsilon = gamma `xor` (bitsToInteger $ replicate n High)
+    in
+        gamma * epsilon
 
 main : IO ()
 main = do
         args <- getArgs
         let (file :: _) = drop 1 args | [] => printLn "No file provided!"
         (Right symbols) <- readFile file | (Left error) => printLn error
-        let (Right bits) = parse (sepBy1 parseBits (char '\n')) symbols | (Left error) => printLn error
+        let (Right bits) = parse (sepBy1 parseBits $ char '\n') symbols | (Left error) => printLn error
         let (Just input) = (validateBinaryList . fst) bits | Nothing => printLn "Lengths of binary arrays are not equal!"
         (printLn . calculatePowerConsumption) input
