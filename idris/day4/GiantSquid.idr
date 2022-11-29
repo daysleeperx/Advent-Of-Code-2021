@@ -10,7 +10,7 @@ import Data.String.Parser
 
 
 Row : Type
-Row = Vect 5 Integer
+Row = Vect 5 (Maybe Integer)
 
 Board : Type
 Board = Vect 5 Row
@@ -22,7 +22,7 @@ InputType : Type
 InputType = (Numbers, List1 Board)
 
 parseRow : Parser Row
-parseRow = ntimes 5 $ lexeme integer
+parseRow = ntimes 5 $ Just <$> lexeme integer
 
 parseBoard : Parser Board
 parseBoard = ntimes 5 $ parseRow
@@ -38,6 +38,25 @@ parseInput = do
         nums <- parseNumbers
         boards <- parseBoards
         pure (nums, boards)
+
+markSquare : Integer -> Maybe Integer -> Maybe Integer
+markSquare x Nothing = Nothing
+markSquare x (Just y) = if x == y then Nothing else Just y
+
+markBoard : Integer -> Board -> Board
+markBoard x = map $ map $ markSquare x
+
+markBoards : Integer -> List1 Board -> List1 Board
+markBoards x = map $ markBoard x
+
+checkMarked : Board -> Bool
+checkMarked = any $ all (== Nothing)
+
+checkBingo : Board -> Bool
+checkBingo b = checkMarked b || checkMarked (transpose b)
+
+bingoScore : Board -> Integer
+bingoScore = sum . catMaybes . toList . Data.Vect.concat
 
 main : IO ()
 main = do
