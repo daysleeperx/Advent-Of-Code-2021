@@ -71,18 +71,15 @@ checkBingo b = checkMarked b || checkMarked (transpose b)
 bingoScore : Board -> Integer
 bingoScore = sum . catMaybes . toList . Data.Vect.concat
 
-winners :  List Board -> List Board
-winners = filter checkBingo
-
 draw : List Integer -> List Board -> List (Integer, Board)
 draw [] _ = []
 draw (last :: rest) boards = 
         let
                 boards' = markBoards last boards
-                winners' = winners boards'
-                losers = boards' \\ winners'
+                winners = filter checkBingo boards'
+                losers = boards' \\ winners
         in
-                map (last, ) winners' ++ draw rest losers
+                map (last,) winners ++ draw rest losers
 
 main : IO ()
 main = do
